@@ -173,7 +173,7 @@ def main():
     sobel_combined = cv2.addWeighted(sobelx_abs, 0.5, sobely_abs, 0.5, 0)
     
     # Laplacian Derivative
-    laplacian = cv2.Laplacian(gray_float, cv2.CV_64F)
+    laplacian = cv2.Laplacian(gray, cv2.CV_64F)
     laplacian_abs = cv2.convertScaleAbs(laplacian)
     
     # Display the gradients
