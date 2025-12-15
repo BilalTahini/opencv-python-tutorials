@@ -200,6 +200,7 @@ def main():
     background = np.ones((height, width, 3), dtype=np.uint8) * [0, 255, 0]  # Green background
     background_mask = cv2.bitwise_not(foreground_mask)
     background = cv2.bitwise_and(background, background, mask=background_mask)
+    background = background.astype(np.uint8)  # Ensure uint8 type for imshow
     
     # Combine foreground and new background
     result = cv2.add(foreground, background)
