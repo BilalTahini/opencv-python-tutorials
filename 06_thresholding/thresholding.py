@@ -7,7 +7,6 @@ This script demonstrates various thresholding techniques in OpenCV
 import cv2
 import numpy as np
 import os
-import matplotlib.pyplot as plt
 
 def main():
     # Get the path to the images directory
@@ -36,7 +35,7 @@ def main():
         img = create_sample_image()
     
     # Ensure we have a valid image
-    if img is None or img.size == 0:
+    if img is None or img[0].size == 0:
         img = create_sample_image()
     
     # Save the sample image if it was created
@@ -187,22 +186,34 @@ def create_sample_image():
     return (img, True)  # Return the image and a flag indicating it's a sample
 
 def display_multiple_images(images, titles):
-    """Display multiple images in a grid using matplotlib"""
+    """Display multiple images in a grid using OpenCV windows"""
     n_images = len(images)
     n_cols = 3
     n_rows = (n_images + n_cols - 1) // n_cols  # Ceiling division
     
-    plt.figure(figsize=(15, 5 * n_rows))
+    # Get standard image size
+    img_height, img_width = 200, 200
     
-    for i in range(n_images):
-        plt.subplot(n_rows, n_cols, i + 1)
-        plt.imshow(images[i], cmap='gray')
-        plt.title(titles[i])
-        plt.xticks([])
-        plt.yticks([])
+    # Create a large canvas to hold all images
+    window_width = img_width * n_cols + 20
+    window_height = img_height * n_rows + 40
+    canvas = np.ones((window_height, window_width), dtype=np.uint8) * 240
     
-    plt.tight_layout()
-    plt.show()
+    # Place images on canvas
+    for idx in range(n_images):
+        row = idx // n_cols
+        col = idx % n_cols
+        
+        y_start = row * img_height + 20
+        x_start = col * img_width + 10
+        
+        # Resize image to fit grid
+        img = cv2.resize(images[idx], (img_width, img_height))
+        canvas[y_start:y_start+img_height, x_start:x_start+img_width] = img
+    
+    # Display the canvas
+    cv2.imshow('Thresholding Results', canvas)
+    print(f"Showing: {', '.join(titles)}")
 
 if __name__ == "__main__":
     main()
